@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const keys = require('./config/keys');
 const quoteRoutes = require('./api/routes/quotes');
+const userRoutes = require('./api/routes/user');
 
 mongoose.connect(keys.mongoURI);
 
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 
 // anything starting with /quotes in the url will be forwarded to the quoteRoutes file
 app.use('/quotes', quoteRoutes);
+app.use('/user', userRoutes);
 
 // middleware that will catch errors here if no fitting route was found
 app.use((req, res, next) => {
