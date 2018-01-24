@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const keys = require('./config/keys');
+const keys = require('./newKeys');
 const quoteRoutes = require('./api/routes/quotes');
 const userRoutes = require('./api/routes/user');
 
