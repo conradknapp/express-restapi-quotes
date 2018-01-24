@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const checkAuth = require('../middleware/checkAuth');
 const multer = require('multer');
 // allows you to adjust how files get stored
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './uploads/');
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, `${new Date().toISOString()}${file.originalname}`);
@@ -23,7 +24,7 @@ const fileFilter = (req, file, cb) => {
 
 // Init multer; specifies place where multer will upload files (multer automatically creates it), or can pass storage object (to let us specify more detailed name/destination info on file upload)
 const upload = multer({ 
-  storage, 
+  storage,
   limits: {
     // stores files only up to 5mb
     fileSize: 1024 * 1024 * 5
@@ -64,15 +65,13 @@ router.get('/', (req, res, next) => {
     })
 });
 
-router.post('/', upload.single('authorImage'), (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
   // 'req.file' is an object available through upload.single()
-  console.log(req.file);
   const quote = new Quote({
     _id: new mongoose.Types.ObjectId(),
     author: req.body.author,
-    text: req.body.text,
+    text: req.body.text
     // we use req.file to get the url of the image
-    authorImage: req.file.path
   });
   quote.save().then(result => {
     console.log(result);
@@ -90,7 +89,6 @@ router.post('/', upload.single('authorImage'), (req, res, next) => {
     });
   })
   .catch(err => {
-    console.error(error);
     res.status(500).json({
       error: err
     });
