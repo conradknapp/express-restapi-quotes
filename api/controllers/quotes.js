@@ -35,7 +35,8 @@ exports.quotes_get_all = (req, res, next) => {
 exports.quotes_create_quote = (req, res, next) => {
   // 'req.file' is an object available through upload.single()
   const quote = new Quote({
-    _id: new mongoose.Types.ObjectId(),
+    // prettier-ignore
+    _id: new mongoose.Types.ObjectId,
     author: req.body.author,
     text: req.body.text
     // we use req.file to get the url of the image
@@ -87,6 +88,38 @@ exports.quotes_get_quote = (req, res, next) => {
       console.log(err);
       res.status(500).json({ error: err });
     });
+};
+
+exports.quotes_get_random_quote = (req, res, next) => {
+  Quote.count({}, (err, dbSize) => {
+    Quote.find()
+      .select("author text authorImage _id")
+      .limit(1)
+      .skip(Math.floor(Math.random() * dbSize))
+      .exec()
+      .then(docs => {
+        const response = {
+          count: docs.length,
+          quotes: docs.map(doc => {
+            return {
+              author: doc.author,
+              text: doc.text,
+              authorImage: doc.authorImage,
+              id: doc._id,
+              request: {
+                type: "GET",
+                url: `http://localhost:3030/quotes/${doc._id}`
+              }
+            };
+          })
+        };
+        res.status(200).json(response);
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({ error: err });
+      });
+  });
 };
 
 exports.quotes_update_quote = (req, res, next) => {

@@ -41,6 +41,8 @@ router.get("/", QuotesController.quotes_get_all);
 
 router.post("/", checkAuth, QuotesController.quotes_create_quote);
 
+router.get("/random", QuotesController.quotes_get_random_quote);
+
 router.get("/:quote_id", QuotesController.quotes_get_quote);
 
 router.patch("/:quote_id", checkAuth, QuotesController.quotes_update_quote);

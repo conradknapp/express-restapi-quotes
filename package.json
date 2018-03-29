@@ -1,9 +1,10 @@
 {
   "name": "rest-philosophy",
   "version": "1.0.0",
-  "description": "A Node REST API for philosophical quotations/aphorisms",
+  "description": "An Express RESTful API which serves philosophical quotations/aphorisms",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "dev": "nodemon app.js"
   },
   "author": "Conrad Knapp",
